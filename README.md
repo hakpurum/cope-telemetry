@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="static/cope-telemetry-logo.png" alt="COPE Telemetry logo" width="180">
+</p>
+
 # Cope Telemetry
 
 [English](#english) | [Türkçe](#türkçe)
@@ -15,6 +19,34 @@ efficiency analysis, sessions, and activity pages. The server listens only on
 - Compare efficiency by model, agent, and project.
 - Use a local SQLite database or demo data that contains no actual usage.
 - Switch between English and Turkish.
+
+### Privacy first: local and offline
+
+Cope Telemetry is designed to run on your computer.
+
+- No cloud service or external server is required.
+- After installation, the dashboard does not require an internet connection.
+- Telemetry data stays on your computer; the app does not send it to third-party
+  services.
+- The local Copilot database is opened read-only. Analysis runs locally, and
+  your session history stays under your control.
+
+### Supported Copilot data sources and compatibility
+
+- **Local SQLite:** `$COPILOT_HOME/session-store.db`; if `COPILOT_HOME` is unset
+  or empty, `~/.copilot/session-store.db` is used.
+- **Agent metadata:** `session-state/<session-id>/events.jsonl` files beside the
+  database. Missing files leave agent names and statuses unavailable.
+- **Demo data:** generated sample records, not actual Copilot usage. Cloud APIs
+  and other import formats are not supported.
+- **Runtime:** Python 3.11 or later and Flask `>=3.1,<4`.
+- **Copilot compatibility:** no Copilot release-version range is declared.
+  Compatibility depends on the SQLite schema. The dashboard expects the
+  `sessions`, `assistant_usage_events`, `turns`, `session_files`, and
+  `forge_trajectory_events` tables. Some extended usage columns are optional;
+  missing optional fields are treated as unavailable. Missing required tables
+  or columns can cause read errors. The database is read-only and is not
+  migrated.
 
 ### Screenshots
 
@@ -158,6 +190,35 @@ Sunucu yalnızca `127.0.0.1` adresini dinler.
 - Model, agent ve proje bazında verimlilik analizi.
 - Yerel SQLite verisi veya gerçek kullanım içermeyen demo veriler.
 - Türkçe ve İngilizce arayüz.
+
+### Gizlilik öncelikli: tamamen yerel ve çevrimdışı
+
+Cope Telemetry kendi bilgisayarınızda çalışacak şekilde tasarlanmıştır.
+
+- Bulut servisi veya harici sunucu gerekmez.
+- Kurulumdan sonra dashboard kullanımı internet bağlantısı gerektirmez.
+- Telemetry verileriniz bilgisayarınızda kalır; uygulama bunları üçüncü taraf
+  servislere göndermez.
+- Yerel Copilot veritabanı salt okunur açılır. Analiz bilgisayarınızda çalışır
+  ve oturum geçmişiniz sizin kontrolünüzde kalır.
+
+### Desteklenen Copilot veri kaynakları ve uyumluluk
+
+- **Yerel SQLite:** `$COPILOT_HOME/session-store.db`; `COPILOT_HOME`
+  tanımlanmamış veya boşsa `~/.copilot/session-store.db` kullanılır.
+- **Agent bilgileri:** Veritabanının yanındaki
+  `session-state/<oturum-kimliği>/events.jsonl` dosyaları. Dosya yoksa agent
+  isimleri ve durumları mevcut değil olarak gösterilir.
+- **Demo veriler:** Gerçek Copilot kullanımı olmayan, üretilmiş örnek kayıtlar.
+  Cloud API'leri ve diğer içe aktarma biçimleri desteklenmez.
+- **Çalışma ortamı:** Python 3.11 veya üzeri ve Flask `>=3.1,<4`.
+- **Copilot uyumluluğu:** Belirli bir Copilot sürüm aralığı beyan edilmez;
+  uyumluluk SQLite şemasına bağlıdır. Dashboard `sessions`,
+  `assistant_usage_events`, `turns`, `session_files` ve
+  `forge_trajectory_events` tablolarını bekler. Bazı ek kullanım sütunları
+  isteğe bağlıdır; yoksa mevcut değil kabul edilir. Gerekli tablo veya sütunlar
+  eksikse okuma hatası oluşabilir. Veritabanı salt okunur açılır ve şema
+  geçişi yapılmaz.
 
 ### Ekran görüntüleri
 
