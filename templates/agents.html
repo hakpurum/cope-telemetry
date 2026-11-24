@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% from "components/macros.html" import panel with context %}
+{% block eyebrow %}TELEMETRY / AGENTS{% endblock %}
+{% block heading %}{{ _('Agentlar') }}{% endblock %}
+{% block description %}{{ _('Yerel oturumlardaki alt agent çalışmaları ve onlara atfedilebilen kullanım.') }}{% endblock %}
+{% block content %}
+<div id="agents-kpis" class="metric-grid"></div>
+<div id="agents-warning" class="agent-warning" role="status" hidden></div>
+<div class="agents-grid">
+  {% call panel('Agent çalışmaları', 'Agent kimliği ve oturum bazında; yalnızca seçili dönemdeki kullanım', extra_class='agents-list') %}<div id="agents-list"></div>{% endcall %}
+  {% call panel('Atıf kapsamı', 'Kimliği olmayan olaylar otomatik olarak ana agenta atfedilmez', extra_class='agents-coverage') %}<div id="agents-coverage"></div>{% endcall %}
+</div>
+{% endblock %}

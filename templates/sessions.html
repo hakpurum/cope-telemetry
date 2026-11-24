@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% from "components/macros.html" import panel with context %}
+{% block eyebrow %}TELEMETRY / SESSIONS{% endblock %}
+{% block heading %}{{ _('Oturumlar') }}{% endblock %}
+{% block description %}{{ _('Oturumları filtreleyin; içerikleri yalnızca seçtiğinizde açın.') }}{% endblock %}
+{% block content %}
+<div id="sessions-kpis" class="metric-grid"></div>
+<div class="sessions-grid">
+  {% call panel('Oturum envanteri', 'Tüm eşleşen oturumlar; seçmek için satıra tıklayın', extra_class='session-list') %}<div id="sessions-list"></div>{% endcall %}
+  {% call panel('Oturum ayrıntısı', 'İçerik varsayılan olarak gizlidir', extra_class='session-detail') %}<div id="session-detail"><p class="empty-state">{{ _('Ayrıntıları görmek için oturum seçin.') }}</p></div>{% endcall %}
+</div>
+{% endblock %}

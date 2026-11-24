@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% from "components/macros.html" import panel with context %}
+{% block eyebrow %}TELEMETRY / OVERVIEW{% endblock %}
+{% block heading %}{{ _('Genel bakış') }}{% endblock %}
+{% block description %}{{ _('Kullanım, performans ve oturum etkinliğinin tek görünümü.') }}{% endblock %}
+{% block content %}
+<div id="overview-kpis" class="metric-grid"></div>
+<div class="overview-grid">
+  {% call panel('Kullanım grafikleri', 'Seçili filtrelere ve yerel güne göre', extra_class='trend-panel') %}
+    <nav class="overview-chart-tabs" role="tablist" aria-label="{{ _('Kullanım grafikleri') }}">
+      <button type="button" role="tab" id="token-tab" aria-controls="token-panel" aria-selected="true">{{ _('Token kullanımı') }}</button>
+      <button type="button" role="tab" id="credit-tab" aria-controls="credit-panel" aria-selected="false" tabindex="-1">{{ _('Kredi kullanımı') }}</button>
+    </nav>
+    <section id="token-panel" role="tabpanel" aria-labelledby="token-tab" tabindex="0">
+      <p class="chart-description">{{ _('Yerel güne göre giriş ve çıkış tokenları') }}</p>
+      <div id="overview-trend" class="chart-area column-chart" data-clear-view></div>
+    </section>
+    <section id="credit-panel" role="tabpanel" aria-labelledby="credit-tab" tabindex="0" hidden>
+      <p class="chart-description">{{ _('Yerel güne göre AI kredisi toplamı; eksik ölçümler kapsam tablosunda belirtilir') }}</p>
+      <div id="overview-credit-trend" class="chart-area" data-clear-view></div>
+      <div id="overview-credit-coverage" class="credit-coverage" data-clear-view></div>
+    </section>
+  {% endcall %}
+  {% call panel('Model dağılımı', 'Kullanım olayı sayısına göre') %}<div id="overview-models"></div>{% endcall %}
+  {% call panel('Token kırılımı', 'Önbellek değerleri girişten ayrı toplanmaz') %}<div id="overview-tokens"></div>{% endcall %}
+  {% call panel('Son oturumlar', 'Seçili filtreyle eşleşen oturumlar', extra_class='overview-sessions') %}<div id="overview-sessions"></div>{% endcall %}
+</div>
+{% endblock %}

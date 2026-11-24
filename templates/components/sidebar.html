@@ -1,0 +1,10 @@
+<aside class="sidebar">
+  <a class="brand" href="{{ url_for('page_view', page='overview') }}" aria-label="{{ _('Cope Telemetry — Genel bakış') }}"><img class="brand-mark" src="{{ url_for('static', filename='cope-mark.svg') }}" alt="" aria-hidden="true"><span><strong>Cope</strong><small>TELEMETRY</small></span></a>
+  <div class="nav-caption">WORKSPACE</div>
+  <nav aria-label="{{ _('Ana navigasyon') }}">
+    {% for item, label, icon in [('overview', 'Genel bakış', '◫'), ('usage', 'Kullanım', '◈'), ('agents', 'Agentlar', '⌘'), ('performance', 'Performans', '◴'), ('efficiency', 'Verimlilik Analizi', '◉'), ('sessions', 'Oturumlar', '▤'), ('activity', 'Etkinlik', '≡')] %}
+    <a class="nav-item {{ 'active' if page == item }}" href="{{ url_for('page_view', page=item) }}" {{ 'aria-current=page' if page == item }}><span class="nav-icon">{{ icon }}</span>{{ _(label) }}{% if page == item %}<span class="nav-active-dot"></span>{% endif %}</a>
+    {% endfor %}
+  </nav>
+  <div class="sidebar-bottom"><span class="status-dot"></span><div><strong>{{ _('Yerel çalışma alanı') }}</strong><small>{{ _('Veriler dışarı gönderilmez') }}</small></div></div>
+</aside>

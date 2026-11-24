@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% from "components/macros.html" import panel with context %}
+{% block eyebrow %}TELEMETRY / ACTIVITY{% endblock %}
+{% block heading %}{{ _('Etkinlik') }}{% endblock %}
+{% block description %}{{ _('Dosya, mesaj ve komut kayıtlarını kendi zamanlarına göre inceleyin.') }}{% endblock %}
+{% block content %}
+<div id="activity-kpis" class="metric-grid"></div>
+<div class="activity-grid">
+  {% call panel('Dosya etkinliği', 'İlk görülme zamanına göre', extra_class='activity-files') %}<div id="activity-files"></div>{% endcall %}
+  {% call panel('Komut olayları', 'Yalnızca veritabanındaki kayıtlar', extra_class='activity-commands') %}<div id="activity-commands"></div>{% endcall %}
+  {% call panel('Mesaj etkinliği', 'İçerikler yalnızca oturum ayrıntısında açılır', extra_class='activity-messages') %}<div id="activity-messages"></div>{% endcall %}
+</div>
+{% endblock %}

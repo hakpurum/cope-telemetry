@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% from "components/macros.html" import panel with context %}
+{% block eyebrow %}TELEMETRY / PERFORMANCE{% endblock %}
+{% block heading %}{{ _('Performans') }}{% endblock %}
+{% block description %}{{ _('İstek süresi ve ilk token gecikmesinin ölçüm kapsamı.') }}{% endblock %}
+{% block content %}
+<div id="performance-kpis" class="metric-grid"></div>
+<div class="performance-grid">
+  {% call panel('Günlük ortalama gecikme', 'Yalnızca mevcut ölçümler', extra_class='performance-chart') %}<div id="performance-trend" class="chart-area"></div>{% endcall %}
+  {% call panel('Bitiş nedenleri', 'Veritabanında kaydedilen değerler') %}<div id="performance-finish"></div>{% endcall %}
+  {% call panel('Modele göre performans', 'Eksik süre ölçümleri ortalamaya katılmaz; kredi toplamlarında ölçüm kapsamı gösterilir', extra_class='performance-models') %}<div id="performance-models"></div>{% endcall %}
+</div>
+{% endblock %}

@@ -1,0 +1,1 @@
+.performance-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(340px,.9fr);gap:16px}.performance-models{grid-column:1/-1}@media(max-width:1100px){.performance-grid{grid-template-columns:1fr}}

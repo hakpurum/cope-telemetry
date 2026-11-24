@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "components/macros.html" import panel with context %}
+{% block eyebrow %}TELEMETRY / EFFICIENCY{% endblock %}
+{% block heading %}{{ _('Verimlilik Analizi') }}{% endblock %}
+{% block description %}{{ _('Kredi tüketimini, ölçülen istek sürelerini ve veri kapsamını karşılaştırın.') }}{% endblock %}
+{% block content %}
+<div class="efficiency-intro">
+  <strong>{{ _('Karar verirken') }}</strong>
+  <span>{{ _('Benzer görevleri karşılaştırın. Daha az kredi veya daha kısa süre, tek başına daha iyi sonuç anlamına gelmez.') }}</span>
+</div>
+<div id="efficiency-warning" class="efficiency-warning" role="status" hidden></div>
+<div class="efficiency-grid">
+  {% call panel('Dönem karşılaştırması', 'Eşit uzunluktaki önceki dönemle AI kredisi', extra_class='wide') %}<div id="efficiency-period"></div>{% endcall %}
+  {% call panel('Döneme göre kullanım olayı', 'Seçili ve önceki dönem') %}<div id="efficiency-period-events"></div>{% endcall %}
+  {% call panel('Döneme göre ortalama istek süresi', 'Yalnızca ölçülen istekler') %}<div id="efficiency-period-duration"></div>{% endcall %}
+  {% call panel('Modele göre kredi', 'Toplam ve ölçülen olay başına kredi') %}<div id="efficiency-models"></div>{% endcall %}
+  {% call panel('Agenta göre kredi', 'Yalnızca agent kimliği bulunan kullanım olayları') %}<div id="efficiency-agents"></div>{% endcall %}
+  {% call panel('Agent ve model', 'Hücrelerde kredi toplamı ve ölçüm kapsamı', extra_class='wide') %}<div id="efficiency-pairs"></div>{% endcall %}
+  {% call panel('Projeye göre kredi', 'Repo; repo yoksa yerel klasör') %}<div id="efficiency-projects"></div>{% endcall %}
+  {% call panel('Projeye göre istek süresi', 'Model isteklerinin toplam süresi; çalışma süresi değildir') %}<div id="efficiency-project-duration"></div>{% endcall %}
+  {% call panel('Model yanıt süresi', 'Ölçülen isteklerin ortalaması') %}<div id="efficiency-model-duration"></div>{% endcall %}
+  {% call panel('Agent yanıt süresi', 'Agenta atfedilen isteklerin ortalaması') %}<div id="efficiency-agent-duration"></div>{% endcall %}
+  {% call panel('Günlük kredi eğilimi', 'Günlere göre AI kredisi · Ayrıntı için noktaya dokunun veya odaklanın', extra_class='wide') %}<div id="efficiency-trend" class="trend-graph"></div><div id="efficiency-peak"></div>{% endcall %}
+  {% call panel('Cache okuma oranı', 'Aynı olayda ölçülen cache okuma / giriş token · Ayrıntı için noktaya dokunun veya odaklanın') %}<div id="efficiency-cache"></div><div id="efficiency-cache-trend" class="trend-graph"></div>{% endcall %}
+  {% call panel('Ölçüm kapsamı', 'Eksik değerler sıfır olarak değerlendirilmez') %}<div id="efficiency-coverage"></div>{% endcall %}
+</div>
+<div class="efficiency-limitations">
+  <strong>{{ _('Henüz ölçülemeyenler') }}</strong>
+  <p>{{ _('Gerçek proje çalışma süresi, çalışma saati başına kredi, görev türü ve sonuç kalitesi bu kayıtlardan güvenilir biçimde belirlenemez. Hata oranı için de doğrulanmış bir istek sonucu ölçümü yoktur.') }}</p>
+</div>
+{% endblock %}

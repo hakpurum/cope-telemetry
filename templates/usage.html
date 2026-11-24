@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% from "components/macros.html" import panel with context %}
+{% block eyebrow %}TELEMETRY / USAGE{% endblock %}
+{% block heading %}{{ _('Kullanım') }}{% endblock %}
+{% block description %}{{ _('Token ve AI kredilerini model ile olay bazında inceleyin. AI kredisi, premium istek veya para tutarı değildir.') }}{% endblock %}
+{% block content %}
+<div id="usage-kpis" class="metric-grid"></div>
+<div class="usage-grid">
+  {% call panel('Günlük token hacmi', 'Yerel güne göre kullanım', extra_class='usage-chart') %}<div id="usage-trend" class="chart-area column-chart"></div>{% endcall %}
+  {% call panel('Model karşılaştırması', 'Olay, token ve raporlanan AI kredileri') %}<div id="usage-models"></div>{% endcall %}
+  {% call panel('Kullanım olayları', 'Filtrelenmiş olayların tamamı; sayfalanır', extra_class='usage-events') %}<div id="usage-events"></div>{% endcall %}
+</div>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% macro panel(title, subtitle='', id='', extra_class='') %}
+<section class="panel {{ extra_class }}"{% if id %} id="{{ id }}"{% endif %}>
+  <div class="panel-header"><div><h2>{{ _(title) }}</h2>{% if subtitle %}<p>{{ _(subtitle) }}</p>{% endif %}</div><span class="panel-badge" data-provenance>{{ _('BEKLENİYOR') }}</span></div>
+  <div class="panel-body">{{ caller() }}</div>
+</section>
+{% endmacro %}

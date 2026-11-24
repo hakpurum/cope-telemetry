@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="{{ language }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>{{ _(page_title) }} · Cope Telemetry</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='cope-mark.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/' + page + '.css') }}">
+</head>
+<body data-page="{{ page }}">
+  <div class="app-shell">
+    {% include "components/sidebar.html" %}
+    <div class="workspace">
+      {% include "components/header.html" %}
+      <main class="content">
+        <div id="source-banner" class="source-banner" role="status">{{ _('Veri kaynağı bekleniyor.') }}</div>
+        <div id="error-banner" class="error-banner" role="alert" hidden></div>
+        <div id="refresh-warning" class="error-banner" role="status" hidden></div>
+        <section class="page-heading">
+          <div><p class="eyebrow">{% block eyebrow %}{% endblock %}</p><h1>{% block heading %}{% endblock %}</h1><p class="page-description">{% block description %}{% endblock %}</p></div>
+          <div class="heading-meta"><span class="live-dot"></span><span id="refresh-status">{{ _('Veri bekleniyor') }}</span><button type="button" class="icon-button" id="refresh-button" aria-label="{{ _('Yenile') }}" title="{{ _('Yenile') }}">↻</button></div>
+        </section>
+        <section class="filters" aria-label="{{ _('Ortak filtreler') }}">
+          <label>{{ _('Kaynak') }}<select id="source-filter"><option value="live">{{ _('Yerel SQLite') }}</option><option value="demo">{{ _('Demo veriler') }}</option></select></label>
+          <label>{{ _('Başlangıç') }}<input id="start-filter" type="date"></label>
+          <label>{{ _('Bitiş') }}<input id="end-filter" type="date"></label>
+          <label>Model<select id="model-filter"><option value="">{{ _('Tüm modeller') }}</option></select></label>
+          <label>Repo<select id="repo-filter"><option value="">{{ _('Tüm repolar') }}</option></select></label>
+          <label>{{ _('Yerel klasör') }}<select id="workspace-filter"><option value="">{{ _('Tüm klasörler') }}</option></select></label>
+          <label>{{ _('Oturum') }}<select id="session-filter"><option value="">{{ _('Tüm oturumlar') }}</option></select></label>
+          <label>{{ _('Yenileme') }}<select id="refresh-interval"><option value="5">{{ _('5 saniye') }}</option><option value="10">{{ _('10 saniye') }}</option><option value="30">{{ _('30 saniye') }}</option><option value="60">{{ _('1 dakika') }}</option><option value="300">{{ _('5 dakika') }}</option><option value="0">{{ _('Manuel') }}</option></select></label>
+          <button type="button" class="text-button" id="reset-filters">{{ _('Sıfırla') }}</button>
+        </section>
+        <p class="scope-note">{{ _('Tarihler yerel saattedir. Repo ve yerel klasör filtreleri birlikte uygulanır. Model filtresi kullanım olaylarını ve eşleşen oturumları sınırlar; mesaj ve dosyalar modele atfedilmez.') }}</p>
+        {% block content %}{% endblock %}
+      </main>
+      <footer>LOCAL-FIRST <span>·</span> {{ _('Salt okunur SQLite') }} <span>·</span> <span id="refresh-footer">{{ _('5 saniyede yenilenir') }}</span></footer>
+    </div>
+  </div>
+  <script id="translations" type="application/json">{{ translations|tojson }}</script>
+  <script src="{{ url_for('static', filename='js/i18n.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/components.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+  <script src="{{ url_for('static', filename='js/' + page + '.js') }}" defer></script>
+</body>
+</html>
