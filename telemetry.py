@@ -2,6 +2,7 @@
 
 import os
 import sqlite3
+from collections import defaultdict
 from contextlib import contextmanager
 from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
@@ -89,6 +90,22 @@ def sessions(connection, start, end, repo=None, model=None, workspace=None):
         """,
         params,
     ).fetchall()
+
+
+def session_models(connection, session_ids):
+    models = defaultdict(set)
+    for offset in range(0, len(session_ids), 500):
+        ids = session_ids[offset:offset + 500]
+        markers = ",".join("?" for _ in ids)
+        rows = connection.execute(
+            f"""SELECT session_id, model FROM assistant_usage_events
+                WHERE session_id IN ({markers}) AND model IS NOT NULL AND model != ''
+                GROUP BY session_id, model ORDER BY session_id, model""",
+            ids,
+        )
+        for row in rows:
+            models[row["session_id"]].add(row["model"])
+    return {session_id: sorted(names) for session_id, names in models.items()}
 
 
 def usage(connection, start, end, repo=None, model=None, session_id=None, extended=False, workspace=None):
