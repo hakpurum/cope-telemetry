@@ -6,7 +6,7 @@ from math import ceil
 
 from agent_metadata import load_agent_metadata
 from localization import translate
-from telemetry import details, open_database, options, session_credit_totals, sessions, usage, workspaces
+from telemetry import details, open_database, options, session_credit_totals, session_models, sessions, usage, workspaces
 
 
 def local_day(value):
@@ -241,6 +241,7 @@ def efficiency_data(events, session_rows, metadata, missing, warnings, language=
 
 
 def snapshot(source, start, end, repo=None, model=None, session_id=None, workspace=None, page=None, language="tr"):
+    models_by_session = {}
     if source == "demo":
         all_sessions, all_events, messages, files, commands = demo_records(language)
         repos = sorted({row["repository"] for row in all_sessions if row["repository"]})
@@ -254,6 +255,12 @@ def snapshot(source, start, end, repo=None, model=None, session_id=None, workspa
                              and (not workspace or row["cwd"] == workspace)
                              and (not model or row["id"] in matching)]
         ids = {row["id"] for row in filtered_sessions if not session_id or row["id"] == session_id}
+        if page == "sessions":
+            models_by_session = defaultdict(set)
+            for row in all_events:
+                if row["session_id"] in ids and row.get("model"):
+                    models_by_session[row["session_id"]].add(row["model"])
+            models_by_session = {key: sorted(names) for key, names in models_by_session.items()}
         selected_events = [row for row in filtered_events if row["session_id"] in ids]
         activity = {}
         if page == "activity":
@@ -270,10 +277,15 @@ def snapshot(source, start, end, repo=None, model=None, session_id=None, workspa
             paths = workspaces(connection)
             filtered_sessions = [dict(row) for row in sessions(connection, start, end, repo, model, workspace)]
             ids = {row["id"] for row in filtered_sessions if not session_id or row["id"] == session_id}
+            if page == "sessions":
+                models_by_session = session_models(connection, sorted(ids))
             selected_events = [dict(row) for row in usage(connection, start, end, repo, model, session_id, extended=True, workspace=workspace)
                                if row["session_id"] in ids]
             activity = activity_rows(connection, sorted(ids), start, end) if page == "activity" else {}
-    selected_sessions = [row for row in filtered_sessions if row["id"] in ids]
+    selected_sessions = [
+        {**row, **({"models": models_by_session.get(row["id"], [])} if page == "sessions" else {})}
+        for row in filtered_sessions if row["id"] in ids
+    ]
     selected_events.sort(key=lambda row: row["created_at"] or "", reverse=True)
     totals, by_model, daily, finish = aggregate(selected_events)
     agents = None
@@ -310,6 +322,7 @@ def session_details(source, session_id, start, end, repo=None, model=None, works
             return None
         _, events, messages, files, commands = demo_records(language)
         session_events = [row for row in events if row["session_id"] == session_id]
+        models = sorted({row["model"] for row in session_events if row.get("model")})
         credits = {"events": len(session_events), **credit_fields(session_events)}
         messages = [row for row in messages if row["session_id"] == session_id and in_range(row["timestamp"], start, end)]
         files = [row for row in files if row["session_id"] == session_id and in_range(row["first_seen_at"], start, end)]
@@ -325,5 +338,7 @@ def session_details(source, session_id, start, end, repo=None, model=None, works
                 [dict(row) for row in rows] for rows in details(connection, session_id, start, end, include_content)
             )
             credits = session_credit_totals(connection, session_id)
+            models = session_models(connection, [session_id]).get(session_id, [])
     return {"messages": messages, "files": files, "commands": commands, "content": include_content,
+            "models": models,
             "session_credits": credits}

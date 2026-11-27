@@ -9,7 +9,9 @@ window.Page = {
       { label: tr("Çıkış token"), value: data.totals.output, note: tr("Olay toplamı") },
     ]);
     UI.table("sessions-list", [
-      { label: tr("Oturum"), value: "id", sessionId: true }, { label: tr("Yerel klasör"), value: "cwd" },
+      { label: tr("Oturum"), value: "id", sessionId: true },
+      { label: tr("Kullanılan modeller"), value: row => row.models?.join(", ") || tr("Mevcut değil") },
+      { label: tr("Yerel klasör"), value: "cwd" },
       { label: "Repo", value: row => row.repository || tr("Repo yok") }, { label: "Branch", value: "branch" },
       { label: tr("Oluşturulma"), value: row => UI.time(row.created_at), kind: "KAYIT" },
       { label: tr("Güncelleme"), value: row => UI.time(row.updated_at), kind: "KAYIT" },
@@ -21,6 +23,7 @@ window.Page = {
     if (!data) return UI.empty(root, tr("Ayrıntıları görmek için oturum seçin."));
     const header = UI.node("div", "detail-header");
     header.append(UI.node("span", "detail-caption", `${UI.provenance(App.source, "KAYIT", 1)} · ${tr("{messages} mesaj / {files} dosya / {commands} komut", { messages: UI.format(data.messages.length), files: UI.format(data.files.length), commands: UI.format(data.commands.length) })}`));
+    header.append(UI.node("span", "detail-caption", `${tr("Kullanılan modeller")}: ${data.models?.join(", ") || tr("Mevcut değil")}`));
     const actions = UI.node("div", "detail-actions");
     const back = UI.node("button", "details-toggle", tr("← Oturum listesine dön"));
     back.type = "button"; back.addEventListener("click", () => App.selectSession(""));

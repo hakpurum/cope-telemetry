@@ -3,6 +3,7 @@ import os
 import sqlite3
 import unittest
 from contextlib import closing
+from datetime import date, timedelta
 from unittest.mock import patch
 
 from dashboard import app
@@ -118,6 +119,20 @@ class DashboardTests(unittest.TestCase):
         self.assertEqual(data["totals"]["aiu_count"], 1)
         self.assertEqual(len(data["sessions"]), 1)
         self.assertNotIn("user_message", response.get_data(as_text=True))
+
+    def test_sessions_show_models_from_full_session_history(self):
+        response = self.client.get(f"/api/data?{self.query}&page=sessions")
+        sessions = {row["id"]: row for row in response.get_json()["sessions"]}
+        self.assertEqual(sessions["s1"]["models"], ["model-a", "model-b"])
+        self.assertEqual(sessions["s2"]["models"], ["model-a"])
+        details = self.client.get(f"/api/session/s1?{self.query}").get_json()
+        self.assertEqual(details["models"], ["model-a", "model-b"])
+        today = date.today()
+        demo_query = f"source=demo&start={(today - timedelta(days=30)).isoformat()}&end={(today + timedelta(days=1)).isoformat()}"
+        demo_session = self.client.get(f"/api/data?{demo_query}&page=sessions").get_json()["sessions"][0]
+        self.assertTrue(demo_session["models"])
+        demo_details = self.client.get(f"/api/session/{demo_session['id']}?{demo_query}").get_json()
+        self.assertEqual(demo_details["models"], demo_session["models"])
 
     def test_performance_model_credits_include_coverage_and_missing_values(self):
         with closing(sqlite3.connect(self.fixture.path)) as writer, writer:
